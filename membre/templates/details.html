@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {% block title %}
+        Details de {{ mesMembres.prenom }} {{ mesMembres.nom}}
+        {% endblock %}
+
+        {% block content %}
+        <h1>{{ mesMembres.prenom }} {{ mesMembres.nom}} </h1>
+        
+        <p> Age: {{ mesMembres.age }} </p>
+        <p> Membre depuis: {{ mesMembres.date_creation }} </p>
+
+        <p> Retour au <a href="/membre">Membres</a> </p>
+        {% endblock %}
+    </body>
+</html>

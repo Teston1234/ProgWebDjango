@@ -35,10 +35,15 @@ def pageConnection(request):
         if user is not None:
             login(request, user)
             return redirect('Home')
+        else:
+            messages.info(request, 'Nom d\'utilisateur ou mot de passe incorrect')
 
     context = {}
     return render(request, 'connection.html', context)
 
+def logoutUser(request):
+    logout(request)
+    return redirect('connection')
 
 def membre(request):
     mesMembres = Membre.objects.all().values()

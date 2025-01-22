@@ -5,6 +5,9 @@ from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+
+from django.contrib.auth.decorators import login_required
+
 from .forms import SalonForm
 from .models import *
 from .forms import *
@@ -13,33 +16,45 @@ from .forms import *
 
 
 def pageInscription(request):
-    form = UserCreationForm()
-    if request.method == 'POST':
-        form = createUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request, 'Compte créé avec succès pour' + user)
-            return redirect('connection')
+    if request.user.is_authenticated:
+        return redirect('Home')
+    else:
+        form = UserCreationForm()
+        if request.method == 'POST':
+            form = createUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data.get('username')
+                messages.success(request, 'Compte créé avec succès pour' + user)
+                return redirect('connection')
 
-    context = {'form':form,}
-    return render(request, 'inscription.html', context)
+        context = {'form':form,}
+        return render(request, 'inscription.html', context)
 
 def pageConnection(request):
+    if request.user.is_authenticated:
+        return redirect('Home')
+    else:
+        if request.method == 'POST':
+            username =request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username, password=password)
 
-    if request.method == 'POST':
-        username =request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('Home')
+            else:
+                messages.info(request, 'Nom d\'utilisateur ou mot de passe incorrect')
 
-        if user is not None:
-            login(request, user)
-            return redirect('Home')
+        context = {}
+        return render(request, 'connection.html', context)
 
-    context = {}
-    return render(request, 'connection.html', context)
+def logoutUser(request):
+    logout(request)
+    return redirect('connection')
 
 
+@login_required(login_url='connection')
 def membre(request):
     mesMembres = Membre.objects.all().values()
     template = loader.get_template('membres.html')
@@ -48,7 +63,7 @@ def membre(request):
     }
     return HttpResponse(template.render(context, request))
 
-
+@login_required(login_url='connection')
 def details(request, id):
     mesMembres = Membre.objects.get(id=id)
     template = loader.get_template('details.html')
@@ -57,10 +72,12 @@ def details(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+@login_required(login_url='connection')
 def Home(request):
     nombre_membres = Membre.count_members()
     return render(request, 'index.html', {'nombre_membres': nombre_membres})
 
+@login_required(login_url='connection')
 def salons_disponible(request):
     salons = Salon.objects.all()
     return render(request, 'salon.html', {'salons': salons})

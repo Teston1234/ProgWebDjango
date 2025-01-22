@@ -18,3 +18,11 @@ class createUserForm(UserCreationForm):
 class connectionForm(AuthenticationForm):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+class SalonForm(forms.ModelForm):
+    class Meta:
+        model = Salon
+        fields = ['nom', 'description', 'users']
+        widgets = {
+            'users': forms.CheckboxSelectMultiple,  # Permet de sélectionner plusieurs utilisateurs
+        }

@@ -14,3 +14,15 @@ class Membre(models.Model):
     @classmethod
     def count_members(cls):
         return cls.objects.count()
+    
+class Salon(models.Model):
+    nom = models.CharField(max_length=100)
+    description = models.TextField()
+    date_creation = models.DateTimeField(auto_now_add=True,null=True)
+
+    def __str__(self):
+        return f"{self.nom}"
+    
+    @classmethod
+    def count_salons(cls):
+        return cls.objects.count()

@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django import forms
+from .models import Salon
 
 from .models import Membre
 
@@ -24,5 +25,5 @@ class SalonForm(forms.ModelForm):
         model = Salon
         fields = ['nom', 'description', 'users']
         widgets = {
-            'users': forms.CheckboxSelectMultiple,  # Permet de sélectionner plusieurs utilisateurs
+            'users': forms.CheckboxSelectMultiple,  
         }

@@ -21,7 +21,7 @@ class Salon(models.Model):
     nom = models.CharField(max_length=100)
     description = models.TextField()
     date_creation = models.DateTimeField(auto_now_add=True,null=True)
-
+    users = models.ManyToManyField(User, related_name="authorized_salons", blank=True) 
     def __str__(self):
         return f"{self.nom}"
     

@@ -8,6 +8,7 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 
+from .forms import SalonForm
 from .models import *
 from .forms import *
 
@@ -78,9 +79,18 @@ def Home(request):
 
 @login_required(login_url='connection')
 def salons_disponible(request):
-    nom = Salon.objects.all().values()
-    template = loader.get_template('index.html')
-    context = {
-        'nom': nom,
-    }
-    return HttpResponse(template.render(context, request))
+    salons = Salon.objects.all()
+    return render(request, 'salon.html', {'salons': salons})
+
+
+def create_salon(request):
+    if request.method == 'POST':
+        form = SalonForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('salon_disponible')  # Redirigez vers la page des salons
+    else:
+        form = SalonForm()
+
+    context = {'form': form}
+    return render(request, 'create_salon.html', context)

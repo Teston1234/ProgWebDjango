@@ -1,31 +1,17 @@
 <!DOCTYPE html>
-<<<<<<< Updated upstream
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Salon</title>
-</head>
-<body>
-    <h1>Salon</h1>
-    <ul>
-        {% for salon in Salon}
-            <li>{{ salon }}</li>
-=======
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EnsiChat</title>
+    <title>Salons Disponibles</title>
 </head>
 <body>
-    <h1>Salons </h1>
+    <h1>Salons Disponibles</h1>
+    <a href="{% url 'create_salon' %}">Créer un Salon</a>
     <ul>
         {% for salon in salons %}
-            <li>{{ Salon.name }} </li>
->>>>>>> Stashed changes
+            <li>{{ salon.nom }} - {{ salon.description }}</li>
         {% endfor %}
     </ul>
-    
 </body>
 </html>

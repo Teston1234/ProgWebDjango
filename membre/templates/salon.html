@@ -8,9 +8,29 @@
 <body>
     <h1>Salons Disponibles</h1>
     <a href="{% url 'create_salon' %}">Créer un Salon</a>
+
     <ul>
         {% for salon in salons %}
-            <li>{{ salon.nom }} - {{ salon.description }}</li>
+            <li>
+                {{ salon.nom }} - {{ salon.description }}
+                
+                <!-- Afficher un bouton pour rejoindre/écrire si l'utilisateur est membre -->
+                {% if user in salon.users.all or salon.created_by == user %}
+                    <a href="{% url 'view_salon' salon.id %}">
+                        <button>Écrire dans le salon</button>
+                    </a>
+                {% else %}
+                    <p>Vous n'êtes pas membre de ce salon. Vous devez être ajouté par le créateur.</p>
+                {% endif %}
+                
+                <!-- Bouton pour supprimer le salon, visible uniquement pour le créateur -->
+                {% if salon.created_by == user %}
+                    <form method="POST" action="{% url 'delete_salon' salon.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Supprimer</button>
+                    </form>
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
 </body>

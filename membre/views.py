@@ -5,9 +5,9 @@ from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-
+from django.core.exceptions import PermissionDenied
 from .forms import SalonForm
 from .models import *
 from .forms import *
@@ -38,7 +38,8 @@ def pageConnection(request):
         if request.method == 'POST':
             username =request.POST.get('username')
             password = request.POST.get('password')
-            user = authenticate(request, username, password=password)
+            user = authenticate(request=request, username=username, password=password)
+
 
             if user is not None:
                 login(request, user)
@@ -83,14 +84,63 @@ def salons_disponible(request):
     return render(request, 'salon.html', {'salons': salons})
 
 
+@login_required(login_url='connection')
 def create_salon(request):
     if request.method == 'POST':
         form = SalonForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('salon_disponible')  # Redirigez vers la page des salons
+            salon = form.save(commit=False)
+            salon.created_by = request.user  # L'utilisateur connecté devient le créateur
+            salon.save()
+            return redirect('view_salon', salon_id=salon.id)  # Redirige vers le salon créé
     else:
         form = SalonForm()
 
     context = {'form': form}
     return render(request, 'create_salon.html', context)
+
+
+
+@login_required(login_url='connection')
+def view_salon(request, salon_id):
+    salon = get_object_or_404(Salon, id=salon_id)
+
+    if request.method == 'POST':
+        contenu = request.POST.get('contenu')
+        if contenu:
+            Message.objects.create(salon=salon, user=request.user, contenu=contenu)
+
+    return render(request, 'view_salon.html', {'salon': salon})
+
+@login_required(login_url='connection')
+def delete_salon(request, salon_id):
+        salon = Salon.objects.get(id=salon_id)
+        if salon.created_by == request.user:  # Vérifie que l'utilisateur est le créateur
+            salon.delete()
+        else:
+            messages.error(request, "Vous n'êtes pas autorisé à supprimer ce salon.")
+        return redirect('salon_disponible')
+
+@login_required(login_url='connection')
+
+@login_required(login_url='connection')
+def ajouter_membre(request, salon_id):
+    salon = get_object_or_404(Salon, id=salon_id)
+    if salon.created_by != request.user:
+        raise PermissionDenied("Vous n'êtes pas autorisé à ajouter des membres à ce salon.")
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        try:
+            user_to_add = User.objects.get(username=username)
+            if user_to_add not in salon.users.all():
+                salon.users.add(user_to_add)
+                messages.success(request, f"L'utilisateur {user_to_add.username} a été ajouté au salon.")
+            else:
+                messages.info(request, "Cet utilisateur est déjà membre du salon.")
+        except User.DoesNotExist:
+            messages.error(request, "L'utilisateur avec ce nom d'utilisateur n'existe pas.")
+        
+    return redirect('view_salon', salon_id=salon_id)
+
+

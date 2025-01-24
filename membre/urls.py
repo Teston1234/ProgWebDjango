@@ -10,7 +10,10 @@ urlpatterns = [
     path("membre/connection", views.pageConnection, name="connection"),
     path("membre/inscription", views.pageInscription, name="inscription"),
     path("membre/logout", views.logoutUser, name="logout"),
-
+    path('membre/salon/<int:salon_id>/', views.view_salon, name='view_salon'),
     path("membre/salon", views.salons_disponible, name="salon_disponible"),
     path('membre/salon/create', views.create_salon, name='create_salon'),
+    path('membre/salon/delete/<int:salon_id>/', views.delete_salon, name='delete_salon'),
+    path('membre/salon/ajouter_membre/<int:salon_id>/', views.ajouter_membre, name='ajouter_membre'),
+
 ]

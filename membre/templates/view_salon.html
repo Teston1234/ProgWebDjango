@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ salon.nom }}</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const salonId = "{{ salon.id }}";
+            const socket = new WebSocket(`ws://${window.location.host}/ws/salon/${salonId}/`);
+
+            // Événement pour recevoir les messages
+            socket.onmessage = function (e) {
+                const data = JSON.parse(e.data);
+                const messageList = document.getElementById('messages');
+
+                const newMessage = document.createElement('li');
+                newMessage.innerHTML = `<strong>${data.user}</strong>: ${data.message}`;
+                messageList.appendChild(newMessage);
+            };
+
+            socket.onopen = function () {
+                console.log("WebSocket connecté !");
+            };
+
+            socket.onerror = function (error) {
+                console.error("Erreur WebSocket :", error);
+            };
+
+            socket.onclose = function () {
+                console.warn("WebSocket fermé !");
+            };
+
+            // Gérer l'envoi des messages
+            const form = document.querySelector('form');
+            form.onsubmit = function (e) {
+                e.preventDefault(); // Empêche l'envoi par défaut du formulaire
+                const input = document.getElementById('contenu');
+                const message = input.value;
+
+                // Envoyer le message via WebSocket
+                socket.send(JSON.stringify({ 'message': message }));
+
+                input.value = ''; // Vider le champ de saisie après l'envoi
+            };
+        });
+    </script>
+</head>
+<body>
+    <h1>{{ salon.nom }}</h1>
+    <p>{{ salon.description }}</p>
+
+    <a href="{% url 'salon_disponible' %}">
+        <button>Retour à la liste des salons</button>
+    </a>
+
+    <h2>Messages</h2>
+    <ul id="messages">
+        {% for message in salon.messages.all %}
+            <li><strong>{{ message.user.username }}</strong>: {{ message.contenu }}</li>
+        {% endfor %}
+    </ul>
+
+    <form>
+        <textarea id="contenu" name="contenu" rows="4" placeholder="Écrivez un message..."></textarea>
+        <button type="submit">Envoyer</button>
+    </form>
+</body>
+</html>

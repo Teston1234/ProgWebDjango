@@ -130,10 +130,10 @@
             <form method="post" action="" class="formulaire_login">
                 {% csrf_token %}
                 <div class="pseudo">
-                    <input type="text" placeholder="entrez votre pseudo"/>
+                    <input type="text" name="username" placeholder="entrez votre pseudo"/>
                 </div>
                 <div class="mdp_login">
-                    <input type="password" placeholder="entrez votre mot de passe"/>
+                    <input type="password"  name="password" placeholder="entrez votre mot de passe"/>
                 </div>
                 <div class="connexion_login">
                     <input class="btn_connexion_login" type="submit" value="se connecter"/>

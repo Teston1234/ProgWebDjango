@@ -9,7 +9,7 @@
         
         <ul id="ul_salon">
             {% for salon in salons %}
-                <li>
+                <li id="li_salon">
                     {{ salon.nom }} - {{ salon.description }}     - Créée par {{ salon.created_by }} le {{ salon.date_creation }}
                     
                     <!-- Afficher un bouton pour rejoindre/écrire si l'utilisateur est membre -->

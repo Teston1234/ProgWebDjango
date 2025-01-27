@@ -1,24 +1,65 @@
 {% extends 'main.html' %}
 {% block content %}
 
-    <h1>Membres</h1>
+    <h1 id="h1_membres">Membres</h1>
 
-    <h3>Voici une liste des membres:</h3>
-    <ul>
+    <h3 id="h3_membres">Voici une liste des membres:</h3>
+    <ul id="ul_membres">
         {% for x in mesMembres %}
-            <li><a href="details/{{ x.id }}"> {{ x.username}}</a></li>
+            <li id="li_membres">{{ x.username}}</li>
         {% endfor %}
     </ul>
     <style>
-        #body li a{
-            color: #1f820b;
-            text-decoration: none;
-        }
-        #body li a:hover {
-            text-decoration: none;
-        }
-        #body li a:visited {
-            color: black;
-        }
+         /* Titre principal */
+    #h1_membres {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-top: 20px;
+        color: #36a420; /* Couleur principale */
+    }
+
+    /* Sous-titre */
+    #h3_membres {
+        font-size: 1.5rem;
+        text-align: center;
+        margin: 20px 0;
+        color: #555;
+    }
+
+    /* Liste des membres */
+    #ul_membres {
+        list-style: none;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    #li_membres {
+        background-color: #f9f9f9;
+        margin: 10px 0;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #li_membres:hover {
+        background-color: #e9f5e7;
+        transform: scale(1.02);
+    }
+
+    #a_membres {
+        text-decoration: none;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #36a420;
+        transition: color 0.3s ease;
+    }
+
+    #a_membres:hover {
+        color: #2f8c1b;
+    }
+
     </style>
 {% endblock %}

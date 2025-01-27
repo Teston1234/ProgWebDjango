@@ -4,26 +4,26 @@
 </head>
 {% block content %}
 
-        <h1>Salons Disponibles</h1>
-        <h3><a href="{% url 'create_salon' %}">Créer un Salon</a></h3>
+        <h2 id="h2_salon">Salons Disponibles</h>
+        <h3 id="h3_salon"><a href="{% url 'create_salon' %}">Créer un Salon</a></h3>
         
-        <ul class="ul">
+        <ul id="ul_salon">
             {% for salon in salons %}
-                <li>
+                <li id="li_salon">
                     {{ salon.nom }} - {{ salon.description }}
                     
                     <!-- Afficher un bouton pour rejoindre/écrire si l'utilisateur est membre -->
                     {% if user in salon.users.all or salon.created_by == user %}
-                        <a href="{% url 'view_salon' salon.id %}">
+                        <a id="a_salon" href="{% url 'view_salon' salon.id %}">
                             <button>Ouvrir le salon</button>
                         </a>
                     {% else %}
-                        <p>Vous n'êtes pas membre de ce salon. Vous devez être ajouté par le créateur.</p>
+                        <p id="p_salon">Vous n'êtes pas membre de ce salon. Vous devez être ajouté par le créateur.</p>
                     {% endif %}
                     
                     <!-- Bouton pour supprimer le salon, visible uniquement pour le créateur -->
                     {% if salon.created_by == user %}
-                        <form method="POST" action="{% url 'delete_salon' salon.id %}" style="display:inline;">
+                        <form id="form_salon" method="POST" action="{% url 'delete_salon' salon.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit">Supprimer</button>
                         </form>
@@ -36,7 +36,7 @@
 
 
 /* Titre principal */
-h1 {
+#h2_salon {
     text-align: center;
     font-size: 2.5rem;
     margin: 20px 0;
@@ -44,26 +44,26 @@ h1 {
 }
 
 /* Sous-titres et liens */
-h3 a {
+#h3_salon a {
     text-decoration: none;
     color: #42b72a;
     font-size: 1.2rem;
     margin-left: 30px;
 }
 
-h3 a:hover {
+#h3_salon a:hover {
     color: #36a420;
 }
 
 /* Liste des salons */
-ul {
+#ul_salon {
     max-width: 800px;
     margin: 20px auto;
     padding: 0;
     list-style: none;
 }
 
-.ul li {
+#li_salon {
     background: #fff;
     margin: 10px 0;
     padding: 20px;
@@ -75,12 +75,12 @@ ul {
     gap: 10px;
 }
 
-.ul li p {
+#p_salon {
     margin: 0;
     color: #555;
 }
 
-.ul li button {
+#li_salon button {
     padding: 10px 15px;
     font-size: 1rem;
     color: #fff;
@@ -91,18 +91,18 @@ ul {
     transition: background-color 0.3s ease;
 }
 
-.ul li button:hover {
+#li_salon button:hover {
     background-color: #36a420;
 }
 
 /* Message pour les utilisateurs non-membres */
-.ul li p {
+#p_salon {
     font-size: 1rem;
     color: #888;
 }
 
 /* Formulaire suppression */
-form button[type="submit"] {
+#form_salon button[type="submit"] {
     background-color: #e63946;
     color: #fff;
     padding: 10px 15px;
@@ -113,7 +113,7 @@ form button[type="submit"] {
     transition: background-color 0.3s ease;
 }
 
-form button[type="submit"]:hover {
+#form_salon button[type="submit"]:hover {
     background-color: #d62828;
 }
 

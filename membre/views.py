@@ -66,13 +66,7 @@ def membre(request):
     }
     return render (request, 'membres.html', context)
 
-@login_required(login_url='connection')
-def details(request, id):
-    mesMembres = User.objects.get(id=id)
-    context = {
-        'mesMembres': mesMembres,
-    }
-    return render (request, 'details.html', context)    
+   
 
 @login_required(login_url='connection')
 def salons_disponible(request):

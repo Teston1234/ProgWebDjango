@@ -1,26 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/styles.css"/>
-    <title>EnsiChat</title>
-</head>
+{% extends 'main.html' %}
 
 
 
 {% block content %}
-<h1>Modifier le salon : {{ salon.nom }}</h1>
+<h1 id="h1_edit">Modifier le salon : {{ salon.nom }}</h1>
 
-<form method="post">
+<form method="post" id="form_edit">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Enregistrer les modifications</button>
 </form>
 
-<a href="{% url 'view_salon' salon.id %}">Annuler</a>
-{% endblock %}
+<a id="a_edit" href="{% url 'view_salon' salon.id %}">Annuler</a>
+
 <style>
     /* Style global */
 body {
@@ -33,7 +25,7 @@ body {
 }
 
 /* Titre principal */
-h1 {
+#h1_edit {
     text-align: center;
     font-size: 2.5rem;
     margin: 20px 0;
@@ -41,7 +33,7 @@ h1 {
 }
 
 /* Formulaire */
-form {
+#form_edit {
     max-width: 600px;
     margin: 20px auto;
     background: #fff;
@@ -51,18 +43,18 @@ form {
     border: 1px solid #ddd;
 }
 
-form p {
+#form_edit p {
     margin-bottom: 15px;
 }
 
-form label {
+#form_edit label {
     font-weight: bold;
     color: #333;
 }
 
-form input,
-form select,
-form textarea {
+#form_edit input,
+#form_edit select,
+#form_edit textarea {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -73,15 +65,15 @@ form textarea {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-form input:focus,
-form select:focus,
-form textarea:focus {
+#form_edit input:focus,
+#form_edit select:focus,
+#form_edit textarea:focus {
     outline: none;
     border-color: #42b72a;
     box-shadow: 0 0 4px rgba(66, 183, 42, 0.8);
 }
 
-form button {
+#form_edit button {
     display: inline-block;
     width: 100%;
     padding: 10px 20px;
@@ -94,12 +86,12 @@ form button {
     transition: background-color 0.3s ease;
 }
 
-form button:hover {
+#form_edit button:hover {
     background-color: #36a420;
 }
 
 /* Lien "Annuler" */
-a {
+#a_edit {
     display: block;
     text-align: center;
     margin: 20px auto;
@@ -109,31 +101,11 @@ a {
     transition: color 0.3s ease;
 }
 
-a:hover {
+#a_edit:hover {
     color: #42b72a;
 }
 
-/* Adaptation mobile */
-@media (max-width: 768px) {
-    body {
-        font-size: 0.9rem;
-    }
 
-    h1 {
-        font-size: 2rem;
-    }
-
-    form {
-        padding: 15px;
-    }
-
-    form button {
-        font-size: 0.9rem;
-    }
-
-    a {
-        font-size: 0.9rem;
-    }
-}
 
 </style>
+{% endblock %}

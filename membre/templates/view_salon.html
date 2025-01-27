@@ -1,11 +1,5 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ salon.nom }}</title>
+{% extends 'main.html' %}
+{% block content %}
     <style>
         /* Style global */
         body {
@@ -260,4 +254,4 @@ form button[type="submit"]:hover {
         <button type="submit">Envoyer</button>
     </form>
 </body>
-</html>
+{% endblock %}

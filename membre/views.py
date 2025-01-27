@@ -51,7 +51,7 @@ def pageConnection(request):
                 messages.info(request, 'Nom d\'utilisateur ou mot de passe incorrect')
 
         context = {}
-        return render(request, 'connection.html', context)
+        return render(request, 'login.html', context)
 
 def logoutUser(request):
     logout(request)

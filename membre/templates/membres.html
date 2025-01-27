@@ -1,35 +1,24 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="style.css">
-        <title>{% block title %}{% endblock %}</title>
-    </head>
-    <header>
-        <h1>EnsiChat</h1>
-    </header>
-    <body>
-
-Mon Projet Web2 - Liste des Membres
-
+{% extends 'main.html' %}
 {% block content %}
-
-    <p> <a href="/">HOME</a> </p>
 
     <h1>Membres</h1>
 
-    <p>Voici une liste des membres:</p>
+    <h3>Voici une liste des membres:</h3>
     <ul>
         {% for x in mesMembres %}
-            <li><a href="details/{{ x.id }}"> {{ x.prenom }} {{x.nom}}</a></li>
+            <li><a href="details/{{ x.id }}"> {{ x.username}}</a></li>
         {% endfor %}
     </ul>
+    <style>
+        #body li a{
+            color: black;
+            text-decoration: none;
+        }
+        #body li a:hover {
+            text-decoration: none;
+        }
+        #body li a:visited {
+            color: black;
+        }
+    </style>
 {% endblock %}
-    </body>
-    <footer>
-        <p>&copy; 2025 EnsiChat</p>
-        <p>Créé par Rayhan, Hugo & Titouan</p>
-        <p>Étudiants en 1ère année à l'ENSISA</p>
-    </footer>
-</html>
-

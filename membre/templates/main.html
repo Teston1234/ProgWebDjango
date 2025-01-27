@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+
+* {
+    box-sizing: border-box;
+    font-family: Helvetica, Verdana, sans-serif;
+}
+#body {
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px 20px 16px 20px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    border-bottom: 3px solid rgb(160, 160, 160);
+}
+nav a {
+    color: #42b72a;
+    text-decoration: none;
+}
+nav a:hover {
+    color: #36a420;  
+}
+nav:first-child {
+    font-size: 24px;
+}
+.list {
+    list-style-type: none;
+    margin-left: auto;
+    display: flex;
+  }
+nav ul li {
+    margin-left: 20px;
+  }
+.footer{
+    border-top: 3px solid rgb(160, 160, 160);
+    margin-top: 10%;
+    text-align: center;
+    display: block;
+    position:static;
+}
+  
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'salon_disponible' %}"><h1>ChatLite</h1></a>
+        <ul class="list">
+            <li><a href="{% url 'salon_disponible' %}">Salon</a></li>
+            <li><a href="{% url 'membre' %}">Membres</a></li>
+            <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+        </ul>
+    </nav>
+    <section id="body"> <!-- body -->
+        {% block content %}
+
+        {% endblock %}
+    </section>
+    <section class="footer"> <!-- footer -->
+        <p>&copy; 2025 ChatLite</p>
+        <p>Créé par Rayhan, Hugo & Titouan</p>
+        <p>Étudiants en 1ère année à l'ENSISA</p>
+    </section>
+</body>

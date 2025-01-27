@@ -1,34 +1,124 @@
 {% extends 'main.html' %}
 
+    <title>Salons Disponibles</title>
+</head>
 {% block content %}
-    <h1>Salons Disponibles</h1>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <a href="{% url 'create_salon' %}">Créer un Salon</a>
-        <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
-            {% csrf_token %}
-            <button type="submit">Se déconnecter</button>
-        </form>
-    </div>
-    <ul>
-        {% for salon in salons %}
-            <li>
-                {{ salon.nom }} - {{ salon.description }}
-                
-                {% if user in salon.users.all or salon.created_by == user %}
-                    <a href="{% url 'view_salon' salon.id %}">
-                        <button>Écrire dans le salon</button>
-                    </a>
-                {% else %}
-                    <p>Vous n'êtes pas membre de ce salon. Vous devez être ajouté par le créateur.</p>
-                {% endif %}
-                
-                {% if salon.created_by == user %}
-                    <form method="POST" action="{% url 'delete_salon' salon.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit">Supprimer</button>
-                    </form>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+
+        <h1>Salons Disponibles</h1>
+        <h3><a href="{% url 'create_salon' %}">Créer un Salon</a></h3>
+        
+        <ul class="ul">
+            {% for salon in salons %}
+                <li>
+                    {{ salon.nom }} - {{ salon.description }}
+                    
+                    <!-- Afficher un bouton pour rejoindre/écrire si l'utilisateur est membre -->
+                    {% if user in salon.users.all or salon.created_by == user %}
+                        <a href="{% url 'view_salon' salon.id %}">
+                            <button>Ouvrir le salon</button>
+                        </a>
+                    {% else %}
+                        <p>Vous n'êtes pas membre de ce salon. Vous devez être ajouté par le créateur.</p>
+                    {% endif %}
+                    
+                    <!-- Bouton pour supprimer le salon, visible uniquement pour le créateur -->
+                    {% if salon.created_by == user %}
+                        <form method="POST" action="{% url 'delete_salon' salon.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+        <style>
+            /* Style global */
+
+
+/* Titre principal */
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 20px 0;
+    color: #42b72a;
+}
+
+/* Sous-titres et liens */
+h3 a {
+    text-decoration: none;
+    color: #42b72a;
+    font-size: 1.2rem;
+    margin-left: 30px;
+}
+
+h3 a:hover {
+    color: #36a420;
+}
+
+/* Liste des salons */
+ul {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0;
+    list-style: none;
+}
+
+.ul li {
+    background: #fff;
+    margin: 10px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ul li p {
+    margin: 0;
+    color: #555;
+}
+
+.ul li button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #42b72a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.ul li button:hover {
+    background-color: #36a420;
+}
+
+/* Message pour les utilisateurs non-membres */
+.ul li p {
+    font-size: 1rem;
+    color: #888;
+}
+
+/* Formulaire suppression */
+form button[type="submit"] {
+    background-color: #e63946;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+    background-color: #d62828;
+}
+
+
+
+
+        </style>
 {% endblock %}

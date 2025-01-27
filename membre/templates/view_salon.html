@@ -7,23 +7,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ salon.nom }}</title>
     <style>
-        #messages-container {
-            max-height: 400px; /* Ajustez selon vos besoins */
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
+        /* Style global */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
 
-        ul#messages {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+/* Titre principal */
+h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: 20px;
+    color: #4A90E2;
+}
 
-        li {
-            margin-bottom: 10px;
-        }
+/* Description */
+p {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Boutons principaux */
+button {
+    display: inline-block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #4A90E2;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #357ABD;
+}
+
+/* Liens avec boutons */
+a button {
+    text-decoration: none;
+}
+
+/* Conteneur des messages */
+#messages-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 400px; /* Limite la hauteur pour les longues discussions */
+    overflow-y: auto; /* Ajoute une barre de défilement */
+}
+
+#messages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#messages li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+#messages li:last-child {
+    border-bottom: none;
+}
+
+#messages li strong {
+    color: #4A90E2;
+}
+
+/* Formulaire */
+form {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form textarea {
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form textarea:focus {
+    outline: none;
+    border-color: #4A90E2;
+    box-shadow: 0 0 4px rgba(74, 144, 226, 0.8);
+}
+
+/* Boutons pour emojis */
+form .emoji-button {
+    background-color: #eee;
+    color: #4A90E2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px 10px;
+    margin-right: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form .emoji-button:hover {
+    background-color: #ddd;
+    transform: scale(1.1);
+}
+
+/* Bouton envoyer */
+form button[type="submit"] {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4A90E2;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+    background-color: #357ABD;
+}
+
+/* Adaptation mobile */
+@media (max-width: 768px) {
+    body {
+        font-size: 0.9rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    form textarea {
+        font-size: 0.9rem;
+    }
+
+    button, .emoji-button {
+        font-size: 0.9rem;
+    }
+}
+
     </style>
 
     <!-- Charger le CSS d'Emoji Mart -->

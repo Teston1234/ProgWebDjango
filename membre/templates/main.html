@@ -10,35 +10,37 @@
     box-sizing: border-box;
     font-family: Helvetica, Verdana, sans-serif;
 }
-#body {
+body {
     margin-top: 10%;
     margin-bottom: 10%;
 }
-nav {
+.nav {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 0;;
+    width: 170%;
     padding: 16px 20px 16px 20px;
     display: flex;
     align-items: center;
     font-size: 16px;
     border-bottom: 3px solid rgb(160, 160, 160);
+    background-color: white;
 }
-nav a {
+.nav a {
     color: #42b72a;
     text-decoration: none;
 }
-nav a:hover {
+.nav a:hover {
     color: #36a420;  
 }
-nav:first-child {
+.nav:first-child {
     font-size: 24px;
 }
 .list {
     list-style-type: none;
     margin-left: auto;
     display: flex;
+
   }
 nav ul li {
     margin-left: 20px;
@@ -54,7 +56,7 @@ nav ul li {
     </style>
 </head>
 <body>
-    <nav>
+    <nav class="nav">
         <a href="{% url 'salon_disponible' %}"><h1>ChatLite</h1></a>
         <ul class="list">
             <li><a href="{% url 'salon_disponible' %}">Salon</a></li>
@@ -69,7 +71,7 @@ nav ul li {
     </section>
     <section class="footer"> <!-- footer -->
         <p>&copy; 2025 ChatLite</p>
-        <p>Créé par Rayhan, Hugo & Titouan</p>
+        <p>Créé par Rayhan, Hugo & Touan</p>
         <p>Étudiants en 1ère année à l'ENSISA</p>
     </section>
 </body>

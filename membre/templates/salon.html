@@ -1,4 +1,6 @@
-<body>
+{% extends 'main.html' %}
+
+{% block content %}
     <h1>Salons Disponibles</h1>
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <a href="{% url 'create_salon' %}">Créer un Salon</a>
@@ -29,4 +31,4 @@
             </li>
         {% endfor %}
     </ul>
-</body>
+{% endblock %}

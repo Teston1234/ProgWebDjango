@@ -1,5 +1,11 @@
-{% extends 'main.html' %}
-{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ salon.nom }}</title>
     <style>
         /* Style global */
         body {
@@ -221,7 +227,7 @@ form button[type="submit"]:hover {
 <body>
     <h1>{{ salon.nom }}</h1>
     <p>{{ salon.description }}</p>
-    {% if salon.created_by == request.user %}
+    {% if salon.created_by == request.user or request.user.is_staff %}
     <a href="{% url 'edit_salon' salon.id %}">
         <button>Modifier le salon</button>
     </a>
@@ -235,7 +241,7 @@ form button[type="submit"]:hover {
     <div id="messages-container">
         <ul id="messages">
             {% for message in salon.messages.all %}
-                <li><strong>{{ message.user.username }}</strong>: {{ message.contenu }}</li>
+                <li><strong>{{ message.user.username }}      </strong>- {{ message.date_creation }} : {{ message.contenu }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -254,4 +260,4 @@ form button[type="submit"]:hover {
         <button type="submit">Envoyer</button>
     </form>
 </body>
-{% endblock %}
+</html>

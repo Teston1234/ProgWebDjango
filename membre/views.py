@@ -105,7 +105,7 @@ def view_salon(request, salon_id):
 @login_required(login_url='connection')
 def delete_salon(request, salon_id):
         salon = Salon.objects.get(id=salon_id)
-        if salon.created_by == request.user:  # Vérifie que l'utilisateur est le créateur
+        if salon.created_by == request.user or request.user.is_staff:  # Vérifie que l'utilisateur est le créateur ou un administrateur
             salon.delete()
         else:
             messages.error(request, "Vous n'êtes pas autorisé à supprimer ce salon.")

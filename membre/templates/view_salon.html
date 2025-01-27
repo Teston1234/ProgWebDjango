@@ -1,68 +1,134 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ salon.nom }}</title>
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
+    <style>
+        #messages-container {
+            max-height: 400px; /* Ajustez selon vos besoins */
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        ul#messages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <!-- Charger le CSS d'Emoji Mart -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-mart@5.6.0/css/emoji-mart.css">
+
+    <script type="module">
+        import { Picker } from 'https://cdn.jsdelivr.net/npm/emoji-mart@5.6.0/+esm';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Charger les données d'emoji
+            const response = await fetch('https://cdn.jsdelivr.net/npm/@emoji-mart/data');
+            const data = await response.json();
+
+            // Initialiser WebSocket
             const salonId = "{{ salon.id }}";
             const socket = new WebSocket(`ws://${window.location.host}/ws/salon/${salonId}/`);
+            const messagesContainer = document.getElementById('messages-container');
+            const messagesList = document.getElementById('messages');
+
+            // Fonction pour faire défiler automatiquement vers le bas
+            const scrollToBottom = () => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            };
 
             // Événement pour recevoir les messages
             socket.onmessage = function (e) {
                 const data = JSON.parse(e.data);
-                const messageList = document.getElementById('messages');
-
                 const newMessage = document.createElement('li');
                 newMessage.innerHTML = `<strong>${data.user}</strong>: ${data.message}`;
-                messageList.appendChild(newMessage);
+                messagesList.appendChild(newMessage);
+
+                // Scroller automatiquement vers le bas
+                scrollToBottom();
             };
 
-            socket.onopen = function () {
-                console.log("WebSocket connecté !");
-            };
+            socket.onopen = () => console.log("WebSocket connecté !");
+            socket.onerror = error => console.error("Erreur WebSocket :", error);
+            socket.onclose = () => console.warn("WebSocket fermé !");
 
-            socket.onerror = function (error) {
-                console.error("Erreur WebSocket :", error);
-            };
-
-            socket.onclose = function () {
-                console.warn("WebSocket fermé !");
-            };
-
-            // Gérer l'envoi des messages
+            // Gestion de l'envoi des messages
             const form = document.querySelector('form');
             form.onsubmit = function (e) {
-                e.preventDefault(); // Empêche l'envoi par défaut du formulaire
+                e.preventDefault();
                 const input = document.getElementById('contenu');
                 const message = input.value;
 
                 // Envoyer le message via WebSocket
                 socket.send(JSON.stringify({ 'message': message }));
 
-                input.value = ''; // Vider le champ de saisie après l'envoi
+                input.value = ''; // Vider le champ après envoi
             };
+
+            // Scroll initial vers le bas (au chargement des messages existants)
+            scrollToBottom();
+
+            // Ajouter des boutons pour emojis textuels
+            const emojiButtons = document.querySelectorAll('.emoji-button');
+            emojiButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const emoji = button.getAttribute('data-emoji');
+                    const input = document.getElementById('contenu');
+                    const cursorPos = input.selectionStart;
+                    const textBefore = input.value.substring(0, cursorPos);
+                    const textAfter = input.value.substring(cursorPos);
+                    input.value = textBefore + emoji + textAfter;
+                    input.focus();
+                    input.selectionStart = input.selectionEnd = cursorPos + emoji.length;
+                });
+            });
         });
     </script>
 </head>
 <body>
     <h1>{{ salon.nom }}</h1>
     <p>{{ salon.description }}</p>
+    {% if salon.created_by == request.user %}
+    <a href="{% url 'edit_salon' salon.id %}">
+        <button>Modifier le salon</button>
+    </a>
+    {% endif %}
 
     <a href="{% url 'salon_disponible' %}">
         <button>Retour à la liste des salons</button>
     </a>
 
     <h2>Messages</h2>
-    <ul id="messages">
-        {% for message in salon.messages.all %}
-            <li><strong>{{ message.user.username }}</strong>: {{ message.contenu }}</li>
-        {% endfor %}
-    </ul>
+    <div id="messages-container">
+        <ul id="messages">
+            {% for message in salon.messages.all %}
+                <li><strong>{{ message.user.username }}</strong>: {{ message.contenu }}</li>
+            {% endfor %}
+        </ul>
+    </div>
 
     <form>
         <textarea id="contenu" name="contenu" rows="4" placeholder="Écrivez un message..."></textarea>
+        
+        <!-- Boutons emoji textuels -->
+        <button type="button" class="emoji-button" data-emoji="😊">😊</button>
+        <button type="button" class="emoji-button" data-emoji="😂">😂</button>
+        <button type="button" class="emoji-button" data-emoji="😜">😜</button>
+        <button type="button" class="emoji-button" data-emoji="😄">😄</button>
+        <button type="button" class="emoji-button" data-emoji="😺">😺</button>
+        <button type="button" class="emoji-button" data-emoji="😉">😉</button>
+
         <button type="submit">Envoyer</button>
     </form>
 </body>

@@ -11,9 +11,12 @@ from django.core.exceptions import PermissionDenied
 from .forms import SalonForm
 from .models import *
 from .forms import *
-
+from django.contrib.auth.models import User
 # Create your views here.
 
+
+def Home(request):
+    return render(request, 'salon.html')
 
 def pageInscription(request):
     if request.user.is_authenticated:
@@ -29,11 +32,11 @@ def pageInscription(request):
                 return redirect('connection')
 
         context = {'form':form,}
-        return render(request, 'inscription.html', context)
+        return render(request, 'register.html', context)
 
 def pageConnection(request):
     if request.user.is_authenticated:
-        return redirect('Home')
+        return redirect('salon_disponible')
     else:
         if request.method == 'POST':
             username =request.POST.get('username')
@@ -43,7 +46,7 @@ def pageConnection(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('Home')
+                return redirect('salon_disponible')
             else:
                 messages.info(request, 'Nom d\'utilisateur ou mot de passe incorrect')
 
@@ -57,26 +60,19 @@ def logoutUser(request):
 
 @login_required(login_url='connection')
 def membre(request):
-    mesMembres = Membre.objects.all().values()
-    template = loader.get_template('membres.html')
+    mesMembres = User.objects.all()
     context = {
         'mesMembres': mesMembres,
     }
-    return HttpResponse(template.render(context, request))
+    return render (request, 'membres.html', context)
 
 @login_required(login_url='connection')
 def details(request, id):
-    mesMembres = Membre.objects.get(id=id)
-    template = loader.get_template('details.html')
+    mesMembres = User.objects.get(id=id)
     context = {
         'mesMembres': mesMembres,
     }
-    return HttpResponse(template.render(context, request))
-
-@login_required(login_url='connection')
-def Home(request):
-    nombre_membres = Membre.count_members()
-    return render(request, 'index.html', {'nombre_membres': nombre_membres})
+    return render (request, 'details.html', context)    
 
 @login_required(login_url='connection')
 def salons_disponible(request):
@@ -122,8 +118,6 @@ def delete_salon(request, salon_id):
         return redirect('salon_disponible')
 
 @login_required(login_url='connection')
-
-@login_required(login_url='connection')
 def ajouter_membre(request, salon_id):
     salon = get_object_or_404(Salon, id=salon_id)
     if salon.created_by != request.user:
@@ -144,3 +138,44 @@ def ajouter_membre(request, salon_id):
     return redirect('view_salon', salon_id=salon_id)
 
 
+@login_required(login_url='connection')
+def edit_salon(request, salon_id):
+    salon = get_object_or_404(Salon, id=salon_id)
+    
+    # Vérifie que l'utilisateur est bien le créateur du salon
+    if salon.created_by != request.user:
+        raise PermissionDenied("Vous n'êtes pas autorisé à modifier ce salon.")
+
+    if request.method == 'POST':
+        form = EditSalonForm(request.POST, instance=salon)
+        if form.is_valid():
+            # Enregistrer le salon sans les utilisateurs
+            salon = form.save(commit=False)
+
+            # Gestion des utilisateurs
+            user_input = form.cleaned_data['users']
+            usernames = [name.strip() for name in user_input.split(',') if name.strip()]
+            users = User.objects.filter(username__in=usernames)
+
+            if len(users) != len(usernames):
+                # Trouve les utilisateurs invalides pour donner un message d'erreur précis
+                invalid_usernames = set(usernames) - set(users.values_list('username', flat=True))
+                messages.error(
+                    request,
+                    f"Les noms d'utilisateur suivants sont invalides : {', '.join(invalid_usernames)}"
+                )
+                return render(request, 'edit_salon.html', {'form': form, 'salon': salon})
+
+            # Associer les utilisateurs au salon
+            salon.save()  # Sauvegarde le salon pour obtenir l'ID
+            salon.users.set(users)  # Remplace les utilisateurs existants
+
+            messages.success(request, "Le salon a été modifié avec succès.")
+            return redirect('view_salon', salon_id=salon.id)
+    else:
+        # Pré-remplir le champ "users" avec les noms des utilisateurs existants
+        initial_users = ', '.join(salon.users.values_list('username', flat=True))
+        form = EditSalonForm(instance=salon, initial={'users': initial_users})
+
+    context = {'form': form, 'salon': salon}
+    return render(request, 'edit_salon.html', context)

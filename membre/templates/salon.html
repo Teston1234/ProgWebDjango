@@ -1,20 +1,17 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salons Disponibles</title>
-</head>
 <body>
     <h1>Salons Disponibles</h1>
-    <a href="{% url 'create_salon' %}">Créer un Salon</a>
-
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <a href="{% url 'create_salon' %}">Créer un Salon</a>
+        <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit">Se déconnecter</button>
+        </form>
+    </div>
     <ul>
         {% for salon in salons %}
             <li>
                 {{ salon.nom }} - {{ salon.description }}
                 
-                <!-- Afficher un bouton pour rejoindre/écrire si l'utilisateur est membre -->
                 {% if user in salon.users.all or salon.created_by == user %}
                     <a href="{% url 'view_salon' salon.id %}">
                         <button>Écrire dans le salon</button>
@@ -23,7 +20,6 @@
                     <p>Vous n'êtes pas membre de ce salon. Vous devez être ajouté par le créateur.</p>
                 {% endif %}
                 
-                <!-- Bouton pour supprimer le salon, visible uniquement pour le créateur -->
                 {% if salon.created_by == user %}
                     <form method="POST" action="{% url 'delete_salon' salon.id %}" style="display:inline;">
                         {% csrf_token %}
@@ -34,4 +30,3 @@
         {% endfor %}
     </ul>
 </body>
-</html>

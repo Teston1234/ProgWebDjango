@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles.css"/>
+    <title>EnsiChat</title>
+</head>
+
+
+
+{% block content %}
+<h1>Modifier le salon : {{ salon.nom }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer les modifications</button>
+</form>
+
+<a href="{% url 'view_salon' salon.id %}">Annuler</a>
+{% endblock %}

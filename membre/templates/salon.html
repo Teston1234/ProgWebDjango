@@ -10,10 +10,10 @@
         <ul class="ul">
             {% for salon in salons %}
                 <li>
-                    {{ salon.nom }} - {{ salon.description }}
+                    {{ salon.nom }} - {{ salon.description }}     - Créée par {{ salon.created_by }} le {{ salon.date_creation }}
                     
                     <!-- Afficher un bouton pour rejoindre/écrire si l'utilisateur est membre -->
-                    {% if user in salon.users.all or salon.created_by == user %}
+                    {% if user in salon.users.all or salon.created_by == user or request.user.is_staff %}
                         <a href="{% url 'view_salon' salon.id %}">
                             <button>Ouvrir le salon</button>
                         </a>
@@ -22,7 +22,7 @@
                     {% endif %}
                     
                     <!-- Bouton pour supprimer le salon, visible uniquement pour le créateur -->
-                    {% if salon.created_by == user %}
+                    {% if salon.created_by == user or request.user.is_staff %}
                         <form method="POST" action="{% url 'delete_salon' salon.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit">Supprimer</button>

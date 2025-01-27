@@ -222,7 +222,7 @@ form button[type="submit"]:hover {
 <body>
     <h1>{{ salon.nom }}</h1>
     <p>{{ salon.description }}</p>
-    {% if salon.created_by == request.user %}
+    {% if salon.created_by == request.user or request.user.is_staff %}
     <a href="{% url 'edit_salon' salon.id %}">
         <button>Modifier le salon</button>
     </a>
@@ -236,7 +236,7 @@ form button[type="submit"]:hover {
     <div id="messages-container">
         <ul id="messages">
             {% for message in salon.messages.all %}
-                <li><strong>{{ message.user.username }}</strong>: {{ message.contenu }}</li>
+                <li><strong>{{ message.user.username }}      </strong>- {{ message.date_creation }} : {{ message.contenu }}</li>
             {% endfor %}
         </ul>
     </div>

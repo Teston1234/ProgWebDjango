@@ -4,14 +4,122 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/styles.css"/>
-    <title>EnsiChat</title>
+    <title>LiteChat</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.body_login {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+.texte_gauche_login, .login_login {
+    flex: 1;
+    max-width: 500px;
+    margin: 20px;
+}
+
+
+.texte_gauche_login {
+    text-align: left;
+}
+
+.titre_login h2 {
+    font-size: 48px;
+    color: #36a420;
+    margin: 0;
+}
+
+.texte_login p {
+    font-size: 20px;
+    color: #000;
+    margin-top: 10px;
+}
+
+
+.login_login {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 400px;
+}
+
+
+.formulaire_login input[type="text"], 
+.formulaire_login input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+
+
+.btn_connexion_login {
+    width: 100%;
+    background-color: #36a420; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.btn_connexion_login:hover {
+    background-color: #42b72a;
+}
+
+
+.enregistrement_login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.enregistrement_login a {
+    color: #42b72a;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.enregistrement_login a:hover {
+    text-decoration: underline;
+}
+
+
+.body_login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.texte_gauche_login {
+    margin-right: 50px;
+}
+
+    </style>
 </head>
 
 <body class="body_login">
     <div class="texte_gauche_login">
         <div class="titre_login">
-            <h2>EnsiChat</h2>
+            <h2>LiteChat</h2>
         </div>
         <div class="texte_login">
             <p>Un endroit pour chatter, en toute tranquillité !</p>
@@ -20,6 +128,7 @@
     <div class="login_login">
         <div class="renseignement_login">
             <form method="post" action="" class="formulaire_login">
+                {% csrf_token %}
                 <div class="pseudo">
                     <input type="text" placeholder="entrez votre pseudo"/>
                 </div>
@@ -31,8 +140,9 @@
                 </div>
 
             </form>
+            {{form.errors}}
             <div class="enregistrement_login">
-                <a href="register.html" class="ml-2">s'enregistrer sur Ensichat</a>
+                <a href="{% url 'inscription' %}" class="ml-2">s'enregistrer sur Litechat</a>
             </div>
 
         </div>

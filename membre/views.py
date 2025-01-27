@@ -29,7 +29,7 @@ def pageInscription(request):
                 return redirect('connection')
 
         context = {'form':form,}
-        return render(request, 'inscription.html', context)
+        return render(request, 'register.html', context)
 
 def pageConnection(request):
     if request.user.is_authenticated:
@@ -48,7 +48,7 @@ def pageConnection(request):
                 messages.info(request, 'Nom d\'utilisateur ou mot de passe incorrect')
 
         context = {}
-        return render(request, 'connection.html', context)
+        return render(request, 'login.html', context)
 
 def logoutUser(request):
     logout(request)
@@ -57,26 +57,19 @@ def logoutUser(request):
 
 @login_required(login_url='connection')
 def membre(request):
-    mesMembres = Membre.objects.all().values()
-    template = loader.get_template('membres.html')
+    mesMembres = User.objects.all()
     context = {
         'mesMembres': mesMembres,
     }
-    return HttpResponse(template.render(context, request))
+    return render (request, 'membres.html', context)
 
 @login_required(login_url='connection')
 def details(request, id):
-    mesMembres = Membre.objects.get(id=id)
-    template = loader.get_template('details.html')
+    mesMembres = User.objects.get(id=id)
     context = {
         'mesMembres': mesMembres,
     }
-    return HttpResponse(template.render(context, request))
-
-@login_required(login_url='connection')
-def Home(request):
-    nombre_membres = Membre.count_members()
-    return render(request, 'index.html', {'nombre_membres': nombre_membres})
+    return render (request, 'details.html', context)    
 
 @login_required(login_url='connection')
 def salons_disponible(request):
@@ -120,8 +113,6 @@ def delete_salon(request, salon_id):
         else:
             messages.error(request, "Vous n'êtes pas autorisé à supprimer ce salon.")
         return redirect('salon_disponible')
-
-@login_required(login_url='connection')
 
 @login_required(login_url='connection')
 def ajouter_membre(request, salon_id):
